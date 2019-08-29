@@ -1,0 +1,45 @@
+public function fileUpload(){
+        echo "branch code=".$_SESSION['brcode'];
+        extract($_POST);
+        $image = $_FILES['imagefile']['tmp_name'];
+        $file =$_SESSION['brcode'].$_FILES['imagefile']['name'];
+        echo "file=".$file;
+
+        $target_dir = "uploads/";
+        //$target_file = $target_dir.$_FILES["imagefile"]["name"];
+        $target_file=$target_dir.$file;
+        $uploadOk = 1;
+        //$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        move_uploaded_file($image, $target_file);
+    }
+
+    public function saveStudentInfo(){
+       echo "branch code=".$_SESSION['brcode'];
+        extract($_POST);
+        $image = $_FILES['imagefile']['tmp_name'];
+        $file =$_SESSION['brcode'].$_FILES['imagefile']['name'];
+        echo "file=".$file;
+
+       $target_dir = "uploads/";
+        //$target_file = $target_dir.$_FILES["imagefile"]["name"];
+        $target_file=$target_dir.$file;
+        $uploadOk = 1;
+        //$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        move_uploaded_file($image, $target_file);
+
+        $image = base64_encode(file_get_contents(addslashes($image)));
+        $link = mysqli_connect('localhost','root','','test');
+        $sql = "  INSERT INTO `hrdata` (`brcode`, `name`,`file`,`image`, `cellno`, `nid`, `pimsno`, `homezilla`, `homeuzilla`, `ppost`, `ppostdojoin`,
+ `dob`, `entrypost`, `entrydojoin`, `highestdegree`, `passingyear`, `orderno`, `transferdate`, `pposting`) 
+ VALUES ('$brcode','$name', '$file','$image', '$cellno','$nid', '$pimsno', '$homezilla', '$homeuzilla', '$ppost', '$ppostdojoin', '$dob', '$entrypost', 
+ '$entrydojoin', '$highestdegree', '$passingyear', N'$orderno', '$transferdate', '$pposting');";
+//        echo "".$sql;
+      //  $sql = "INSERT INTO students(student_name,mobile_no,email_address) VALUES ('$student_name','$mobile_no','$email_address')";
+        if(mysqli_query($link,$sql)){
+            header('location:successful.php');
+                       return 'Branch Data saved successfully';
+        } else {
+            die('Query Problem'.mysqli_error($link));
+        };
+
+    }
